@@ -38,20 +38,15 @@ export default function SignUpPage() {
     }
 
     try {
-      const redirectUrl =
-        process.env.NODE_ENV === "production"
-          ? process.env.NEXT_PUBLIC_PROD_SUPABASE_REDIRECT_URL
-          : process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-            `${window.location.origin}/admin`;
-
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
+          emailRedirectTo:
+            process.env.NEXT_PUBLIC_PROD_SUPABASE_REDIRECT_UR ||
+            `${window.location.origin}/admin`,
         },
       });
-
       if (error) throw error;
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
