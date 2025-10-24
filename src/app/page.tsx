@@ -1,4 +1,4 @@
-import Navbar from "@/components/navbar"
+import NavbarWithAuth from "@/components/navbar"
 import Hero from "@/components/hero"
 import JelajahiDesa from "@/components/jelajahi-desa"
 import StrukturOrganisasi from "@/components/struktur-organisasi"
@@ -12,7 +12,7 @@ import PetaDesa from "@/components/peta-desa"
 export default function Home() {
   return (
     <main>
-      <Navbar />
+      <NavbarWithAuth />
       <Hero />
       <div className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-0">
