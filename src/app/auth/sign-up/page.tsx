@@ -42,9 +42,7 @@ export default function SignUpPage() {
         email,
         password,
         options: {
-          emailRedirectTo:
-            process.env.NEXT_PUBLIC_PROD_SUPABASE_REDIRECT_UR ||
-            `${window.location.origin}/admin`,
+          emailRedirectTo: process.env.NEXT_PUBLIC_PROD_SUPABASE_REDIRECT_UR,
         },
       });
       if (error) throw error;
