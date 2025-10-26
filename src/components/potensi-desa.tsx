@@ -1,105 +1,28 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { Wheat, Beef, ChevronDown } from 'lucide-react'
-import DetailPotensiDesa from './detail-potensi-desa'
+import { useState } from "react"
+import { Wheat, Beef, ChevronDown } from "lucide-react"
+import Link from "next/link"
 
 const POTENSI_DATA = {
   pertanian: {
-    id: 'pertanian',
-    title: 'Pertanian',
+    id: "pertanian",
+    title: "Pertanian",
     icon: Wheat,
-    description: 'Desa Kiawa Satu memiliki potensi pertanian yang besar dengan lahan subur dan iklim yang mendukung.',
-    heroImage: '/images/tees.jpg',
-    sections: [
-      {
-        title: 'Lahan Pertanian yang Subur',
-        description: 'Desa Kiawa Satu memiliki lahan pertanian yang sangat subur dengan struktur tanah yang mendukung berbagai jenis tanaman. Tanah dengan kandungan nutrisi tinggi memungkinkan petani untuk melakukan pertanian berkelanjutan dengan hasil yang optimal.',
-      },
-      {
-        title: 'Jenis Tanaman Utama',
-        description: 'Tanaman utama yang ditanam di desa ini meliputi padi, jagung, dan palawija lainnya. Setiap musim, petani dapat menghasilkan panen yang berlimpah berkat kondisi alam yang mendukung dan pengetahuan pertanian yang telah diwariskan turun-temurun.',
-      },
-      {
-        title: 'Sistem Irigasi Modern',
-        description: 'Desa telah mengembangkan sistem irigasi yang efisien untuk memastikan ketersediaan air sepanjang tahun. Infrastruktur ini mendukung intensifikasi pertanian dan meningkatkan produktivitas lahan.',
-      },
-      {
-        title: 'Program Pemberdayaan Petani',
-        description: 'Pemerintah desa aktif memberikan pelatihan dan pendampingan kepada petani tentang teknik pertanian modern, penggunaan pupuk organik, dan manajemen hasil panen untuk meningkatkan nilai jual produk pertanian.',
-      },
-      {
-        title: 'Potensi Agribisnis',
-        description: 'Selain pertanian subsisten, terdapat peluang besar untuk mengembangkan agribisnis dengan mengolah hasil pertanian menjadi produk bernilai tambah seperti tepung, keripik, dan makanan siap jual lainnya.',
-      },
-    ],
+    description: "Desa Kiawa Satu memiliki potensi pertanian yang besar dengan lahan subur dan iklim yang mendukung.",
   },
   peternakan: {
-    id: 'peternakan',
-    title: 'Peternakan',
+    id: "peternakan",
+    title: "Peternakan",
     icon: Beef,
-    description: 'Sektor peternakan berkembang dengan populasi ternak yang terus meningkat setiap tahunnya.',
-    heroImage: '/images/minahasa.jpg',
-    sections: [
-      {
-        title: 'Populasi Ternak yang Berkembang',
-        description: 'Peternakan di Desa Kiawa Satu menunjukkan pertumbuhan yang konsisten. Populasi ternak sapi, kambing, dan ayam terus bertambah, mencerminkan meningkatnya minat masyarakat terhadap usaha peternakan sebagai sumber pendapatan alternatif.',
-      },
-      {
-        title: 'Peternakan Sapi Potong',
-        description: 'Usaha peternakan sapi potong menjadi salah satu fokus utama dengan sistem pemeliharaan yang semi-intensif. Masyarakat telah mengadopsi teknologi pemberian pakan berkualitas tinggi untuk menghasilkan ternak yang lebih produktif.',
-      },
-      {
-        title: 'Peternakan Kambing dan Domba',
-        description: 'Kambing dan domba banyak dipelihara oleh masyarakat karena memerlukan investasi awal yang lebih rendah dan perawatan yang lebih mudah. Produktivitas tinggi membuat usaha ini menjadi pilihan populer di kalangan petani peternak.',
-      },
-      {
-        title: 'Usaha Peternakan Unggas',
-        description: 'Peternakan ayam potong dan petelur berkembang pesat di desa ini. Banyak masyarakat yang mulai mengembangkan usaha ini dalam skala kecil hingga menengah dengan hasil yang menguntungkan.',
-      },
-      {
-        title: 'Penyediaan Pakan Ternak',
-        description: 'Untuk mendukung perkembangan peternakan, telah berkembang usaha penyediaan pakan ternak berkualitas. Beberapa petani juga mengolah limbah pertanian menjadi pakan alternatif yang ekonomis dan bergizi.',
-      },
-      {
-        title: 'Program Kesehatan Ternak',
-        description: 'Desa memfasilitasi program kesehatan ternak melalui vaksinasi rutin dan pendampingan teknis dari petugas lapangan. Ini memastikan kesehatan ternak terjaga dan produktivitas tetap optimal.',
-      },
-    ],
+    description: "Sektor peternakan berkembang dengan populasi ternak yang terus meningkat setiap tahunnya.",
   },
 }
 
 export default function PotensiDesa() {
-  const [selectedPotensi, setSelectedPotensi] = useState<string | null>(null)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
   const potensiBisnis = Object.values(POTENSI_DATA)
-
-  // Listen untuk custom event dari navbar
-  useEffect(() => {
-    const handleNavigateToPotensi = (event: Event) => {
-      const customEvent = event as CustomEvent
-      const potensiId = customEvent.detail.id as string
-      setSelectedPotensi(potensiId)
-      setOpenDropdown(null)
-    }
-
-    window.addEventListener('navigateToPotensi', handleNavigateToPotensi)
-    return () => window.removeEventListener('navigateToPotensi', handleNavigateToPotensi)
-  }, [])
-
-  if (selectedPotensi) {
-    const detail = POTENSI_DATA[selectedPotensi as keyof typeof POTENSI_DATA]
-    return (
-      <DetailPotensiDesa
-        id={detail.id}
-        title={detail.title}
-        heroImage={detail.heroImage}
-        sections={detail.sections}
-        onBack={() => setSelectedPotensi(null)}
-      />
-    )
-  }
 
   return (
     <section id="potensi" className="py-16 md:py-24 border-b border-gray-200">
@@ -128,27 +51,20 @@ export default function PotensiDesa() {
                 <p className="text-gray-600 leading-relaxed mb-4">{item.description}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-red-600 font-semibold">Lihat Detail</span>
-                  <ChevronDown
-                    className={`w-5 h-5 text-red-600 transition-transform ${
-                      isOpen ? 'rotate-180' : ''
-                    }`}
-                  />
+                  <ChevronDown className={`w-5 h-5 text-red-600 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                 </div>
               </button>
 
               {/* Dropdown Menu */}
               {isOpen && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-red-300 rounded-lg shadow-lg z-10 overflow-hidden">
-                  <button
-                    onClick={() => {
-                      setSelectedPotensi(item.id)
-                      setOpenDropdown(null)
-                    }}
-                    className="w-full px-6 py-4 text-left hover:bg-red-50 transition-colors text-gray-800 font-semibold border-b border-red-100 flex items-center justify-between group"
+                  <Link
+                    href={`/potensi/${item.id}`}
+                    className="w-full px-6 py-4 text-left hover:bg-red-50 transition-colors text-gray-800 font-semibold border-b border-red-100 flex items-center justify-between group block"
                   >
                     <span>Baca Detail Lengkap</span>
                     <span className="text-red-600 group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
+                  </Link>
                   <div className="px-6 py-3 bg-red-50 text-sm text-gray-600">
                     Klik untuk membaca penjelasan lengkap tentang {item.title.toLowerCase()}
                   </div>
