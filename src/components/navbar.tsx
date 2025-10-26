@@ -213,13 +213,14 @@
                     </button>
                   </div>
                 ) : (
-                  <Link
-                    href="/auth/login"
-                    className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    Admin
-                  </Link>
+                  // <Link
+                  //   href="/auth/login"
+                  //   className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                  // >
+                  //   <LogIn className="w-4 h-4" />
+                  //   Admin
+                  // </Link>
+                  <div></div>
                 )}
               </li>
             </ul>
@@ -336,7 +337,7 @@
                 <li className="border-t pt-4 mt-4">
                   {user ? (
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-600">Logged in as: {user.email}</p>
+                      {/* <p className="text-sm text-gray-600">Logged in as: {user.email}</p> */}
                       <Link
                         href="/admin"
                         className="w-full block text-center px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
