@@ -1,1 +1,0 @@
-// saya hitam sekali
