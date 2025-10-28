@@ -165,7 +165,7 @@ const HistoryContent = () => {
     { tahun: "Tahun 1954-1958", nama: "Marthin L Rakian", status: "DEFINITIF" },
     { tahun: "Tahun 1958-1963", nama: "Dirk Silap", status: "PEJABAT HUKUM TUA" },
     { tahun: "Tahun 1963-1971", nama: "Altien Lombok", status: "DEFINITIF" },
-    { tahun: "Tahun 1971-1974", nama: "Soleman Piri", status: "PJABAT" },
+    { tahun: "Tahun 1971-1974", nama: "Soleman Piri", status: "PEJABAT" },
     { tahun: "Tahun 1975-1981", nama: "M.L Suak", status: "DEFINITIF" },
     { tahun: "Tahun 1981-1988", nama: "Jopie Rondonuwu", status: "DEFINITIF" },
     { tahun: "Tahun 1988-1989", nama: "Joost Toporundeng", status: "PEJABAT" },
