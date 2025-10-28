@@ -61,7 +61,7 @@ export default function StrukturOrganisasi() {
                 />
               </div>
               <div className="text-red-600 font-bold mb-2">Bendahara Desa</div>
-              <div className="text-sm text-gray-600">Gracella Mait</div>
+              <div className="text-sm text-gray-600">-</div>
             </div>
           </div>
 
