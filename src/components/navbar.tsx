@@ -1,4 +1,4 @@
-  "use client"
+"use client"
 
   import { useState, useEffect } from "react"
   import Image from "next/image"
@@ -175,6 +175,12 @@
                   >
                     Peternakan
                   </button>
+                  <button
+                    onClick={() => navigateToPotensi("usaha-swasta")}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Usaha Swasta Rumahan
+                  </button>
                 </div>
               </li>
 
@@ -297,13 +303,19 @@
                         onClick={() => navigateToPotensi("pertanian")}
                         className="block w-full text-left text-gray-600 hover:text-red-600 transition"
                       >
-                        Pertania
+                        Pertanian
                       </button>
                       <button
                         onClick={() => navigateToPotensi("peternakan")}
                         className="block w-full text-left text-gray-600 hover:text-red-600 transition"
                       >
                         Peternakan
+                      </button>
+                      <button
+                        onClick={() => navigateToPotensi("usaha-swasta")}
+                        className="block w-full text-left text-gray-600 hover:text-red-600 transition"
+                      >
+                        Usaha Swasta Rumahan
                       </button>
                     </div>
                   )}
