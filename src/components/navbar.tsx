@@ -1,9 +1,8 @@
 "use client"
-"use client"
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { ChevronDown, LogOut, LogIn } from "lucide-react"
+import { ChevronDown, LogOut, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { usePathname, useRouter } from "next/navigation"
@@ -17,7 +16,6 @@ export default function NavbarWithAuth() {
   const pathname = usePathname()
   const router = useRouter()
 
-  // 🔹 Mengecek login user
   useEffect(() => {
     const checkUser = async () => {
       const {
@@ -38,7 +36,6 @@ export default function NavbarWithAuth() {
     return () => subscription?.unsubscribe()
   }, [])
 
-  // 🔹 Fungsi bantu untuk scroll ke section (kalau di halaman utama)
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
     if (element) {
@@ -48,18 +45,15 @@ export default function NavbarWithAuth() {
     }
   }
 
-  // 🔹 Fungsi untuk pindah ke halaman utama lalu scroll ke section
   const navigateOrScroll = (sectionId: string) => {
     if (pathname === "/") {
       scrollToSection(sectionId)
     } else {
-      // simpan sectionId di localStorage agar bisa diakses setelah redirect
       localStorage.setItem("scrollToSection", sectionId)
       router.push("/")
     }
   }
 
-  // 🔹 Setelah kembali ke home, auto scroll ke section yang diminta
   useEffect(() => {
     if (pathname === "/") {
       const sectionId = localStorage.getItem("scrollToSection")
@@ -95,10 +89,15 @@ export default function NavbarWithAuth() {
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <button onClick={() => router.push("/")} className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
           <Image src="/images/minahasa.jpg" alt="Logo Minahasa" width={50} height={50} className="object-contain" />
           <span className="font-bold text-lg text-gray-800">Desa Kiawa Satu</span>
-        </div>
+        </button>
+
+        {/* Hamburger Button - Mobile */}
+        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-gray-700 hover:text-red-600 transition">
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex gap-8 items-center">
@@ -143,6 +142,9 @@ export default function NavbarWithAuth() {
               <button onClick={() => router.push("/potensi/peternakan")} className="block w-full text-left px-4 py-2 hover:bg-red-50 hover:text-red-600 transition">
                 Peternakan
               </button>
+              <button onClick={() => router.push("/potensi/usaha-swasta")} className="block w-full text-left px-4 py-2 hover:bg-red-50 hover:text-red-600 transition">
+                Usaha Swasta Rumahan
+              </button>
             </div>
           </li>
 
@@ -173,14 +175,191 @@ export default function NavbarWithAuth() {
                 </button>
               </div>
             ) : (
-              // <Link href="/auth/login" className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
-              //   <LogIn className="w-4 h-4" /> Admin
-              // </Link>
               <div></div>
             )}
           </li>
         </ul>
       </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden bg-white border-t shadow-lg">
+          <ul className="flex flex-col">
+            <li className="border-b">
+              <button
+                onClick={() => setDropdownState(dropdownState === "jelajahi" ? null : "jelajahi")}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition flex items-center justify-between"
+              >
+                Jelajahi
+                <ChevronDown className={`w-4 h-4 transition-transform ${dropdownState === "jelajahi" ? "rotate-180" : ""}`} />
+              </button>
+              {dropdownState === "jelajahi" && (
+                <div className="bg-gray-50">
+                  <button
+                    onClick={() => {
+                      router.push("/jelajahi/profil")
+                      setIsOpen(false)
+                      setDropdownState(null)
+                    }}
+                    className="block w-full text-left px-8 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Profil Desa
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/jelajahi/sejarah")
+                      setIsOpen(false)
+                      setDropdownState(null)
+                    }}
+                    className="block w-full text-left px-8 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Sejarah Desa
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/jelajahi/visiMisi")
+                      setIsOpen(false)
+                      setDropdownState(null)
+                    }}
+                    className="block w-full text-left px-8 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Visi & Misi
+                  </button>
+                </div>
+              )}
+            </li>
+
+            <li className="border-b">
+              <button
+                onClick={() => {
+                  navigateOrScroll("organisasi")
+                  setIsOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+              >
+                Organisasi
+              </button>
+            </li>
+
+            <li className="border-b">
+              <button
+                onClick={() => {
+                  navigateOrScroll("penduduk")
+                  setIsOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+              >
+                Penduduk
+              </button>
+            </li>
+
+            <li className="border-b">
+              <button
+                onClick={() => setDropdownState(dropdownState === "potensi" ? null : "potensi")}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition flex items-center justify-between"
+              >
+                Potensi
+                <ChevronDown className={`w-4 h-4 transition-transform ${dropdownState === "potensi" ? "rotate-180" : ""}`} />
+              </button>
+              {dropdownState === "potensi" && (
+                <div className="bg-gray-50">
+                  <button
+                    onClick={() => {
+                      router.push("/potensi/pertanian")
+                      setIsOpen(false)
+                      setDropdownState(null)
+                    }}
+                    className="block w-full text-left px-8 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Pertanian
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/potensi/peternakan")
+                      setIsOpen(false)
+                      setDropdownState(null)
+                    }}
+                    className="block w-full text-left px-8 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Peternakan
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/potensi/usaha-swasta")
+                      setIsOpen(false)
+                      setDropdownState(null)
+                    }}
+                    className="block w-full text-left px-8 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Usaha Swasta Rumahan
+                  </button>
+                </div>
+              )}
+            </li>
+
+            <li className="border-b">
+              <button
+                onClick={() => {
+                  navigateOrScroll("peta")
+                  setIsOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+              >
+                Peta
+              </button>
+            </li>
+
+            <li className="border-b">
+              <button
+                onClick={() => {
+                  navigateOrScroll("berita")
+                  setIsOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+              >
+                Berita
+              </button>
+            </li>
+
+            <li className="border-b">
+              <button
+                onClick={() => {
+                  navigateOrScroll("kontak")
+                  setIsOpen(false)
+                }}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+              >
+                Kontak
+              </button>
+            </li>
+
+            {user && (
+              <>
+                <li className="border-b">
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={() => {
+                      handleLogout()
+                      setIsOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition flex items-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" /> Logout
+                  </button>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      )}
     </nav>
   )
 }
