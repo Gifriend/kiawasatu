@@ -3,19 +3,13 @@
 import { useParams, useRouter } from "next/navigation"
 import NavbarWithAuth from "@/components/navbar"
 import Footer from "@/components/footer"
-import { ArrowLeft, Target, Compass, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, Target, Compass, CheckCircle2, Landmark, MapPin, Globe, Flag, Building2, Users, Sprout, Home, TrendingUp } from "lucide-react"
 
-const JELAJAHI_DATA: Record<string, { title: string; content?: string; isHistoryPage?: boolean; isVisionMissionPage?: boolean }> = {
-  profil: {
-    title: "Profil Desa",
-    content: `Desa Kiawa Satu adalah sebuah desa yang terletak di Kabupaten Minahasa, Provinsi Sulawesi Utara. Desa ini memiliki potensi alam yang kaya dan masyarakat yang dinamis.
-
-Secara administratif, Desa Kiawa Satu terdiri dari beberapa lingkungan dengan total populasi penduduk yang terus berkembang. Desa ini memiliki luas wilayah yang strategis dan dapat diakses dengan mudah.
-
-Pemerintah Desa Kiawa Satu berkomitmen untuk memberikan pelayanan terbaik kepada masyarakat dan mengembangkan potensi desa secara berkelanjutan. Kami bekerja sama dengan berbagai stakeholder untuk meningkatkan kualitas hidup masyarakat.
-
-Visi kami adalah menjadi desa yang maju, sejahtera, dan berkelanjutan. Melalui berbagai program pembangunan, kami terus berinovasi untuk memberikan dampak positif bagi seluruh masyarakat.`,
-  },
+const JELAJAHI_DATA: Record<string, { title: string; content?: string; isHistoryPage?: boolean; isVisionMissionPage?: boolean; isProfilPage?: boolean }> = {
+profil: {
+  title: "Profil Desa",
+  isProfilPage: true,
+},
   sejarah: {
     title: "Sejarah Desa",
     isHistoryPage: true,
@@ -24,6 +18,373 @@ Visi kami adalah menjadi desa yang maju, sejahtera, dan berkelanjutan. Melalui b
     title: "Visi & Misi",
     isVisionMissionPage: true,
   },
+}
+
+const ProfilContent = () => {
+  return (
+    <div className="space-y-16">
+      {/* Header Intro */}
+      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-lg">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">TENTANG DESA KIAWA SATU</h2>
+        <p className="text-red-50 text-lg leading-relaxed">
+          Desa Kiawa Satu merupakan desa yang memiliki sejarah panjang sejak abad ke-15, dengan penduduk yang merupakan keturunan dari kelompok masyarakat Tontemboan berasal dari pembagian Tanah Malesung di Batu Pinawetengan pada abad ke-10.
+        </p>
+      </div>
+
+      {/* Sejarah Singkat */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          SEJARAH SINGKAT
+        </h3>
+        <div className="bg-white border-2 border-red-200 rounded-lg p-8 shadow-md hover:shadow-lg transition-all">
+          <div className="space-y-4 text-gray-700 leading-relaxed text-lg">
+            <p>
+              Penduduk Desa Kiawa Satu adalah keturunan dari rombongan kelompok <strong className="text-red-600">Tontemboan</strong> yang bergerak menuju utara. Nama <strong className="text-red-600">"Kiawa"</strong> berasal dari kata <strong>"Cakio-Kiowa"</strong> yang berarti ragu-ragu, merujuk pada kelompok penduduk yang memilih bertahan di wilayah ini ketika sebagian besar masyarakat berpindah ke utara pada tahun 1845.
+            </p>
+            <p>
+              Melalui beberapa periode perkembangan dari <strong>Tinincasan</strong> (abad XV), <strong>Nimawale</strong> (sekitar 1600), hingga <strong>Songkel/Sonder</strong> (sekitar 1650), Desa Kiawa akhirnya berkembang menjadi pemukiman tetap yang kaya akan warisan budaya.
+            </p>
+            <p>
+              Wilayah ini dikenal dengan kehadiran <strong className="text-red-600">Batu Tumotowa</strong> sebagai batu penjuru negeri dan sekitar <strong>30 Waruga</strong> (kuburan batu) yang tersebar di wilayah Nimawale, membuktikan bahwa tempat ini adalah pusat kehidupan orang-orang satria masa lalu.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Identitas Desa */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          IDENTITAS DESA
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Landmark className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Nama Desa</p>
+                <p className="text-lg text-gray-800 font-bold">Desa Kiawa Satu</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Kecamatan</p>
+                <p className="text-lg text-gray-800 font-bold">Kawangkoan Utara</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Globe className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Kabupaten</p>
+                <p className="text-lg text-gray-800 font-bold">Minahasa</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Flag className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Provinsi</p>
+                <p className="text-lg text-gray-800 font-bold">Sulawesi Utara</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all md:col-span-2">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Building2 className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Luas Wilayah</p>
+                <p className="text-lg text-gray-800 font-bold">[Isi luas wilayah] hektar</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all md:col-span-2">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Users className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Struktur Desa</p>
+                <p className="text-lg text-gray-800 font-bold">Terdiri dari 3 Jaga yang tersebar di wilayah Desa Kiawa Satu</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Demografi */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          DEMOGRAFI
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="text-center">
+              <Users className="w-8 h-8 text-red-600 mx-auto mb-3" />
+              <p className="text-sm text-gray-600 font-semibold uppercase mb-2">Jumlah Penduduk</p>
+              <p className="text-2xl text-gray-800 font-bold">[Isi jumlah] jiwa</p>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="text-center">
+              <Home className="w-8 h-8 text-red-600 mx-auto mb-3" />
+              <p className="text-sm text-gray-600 font-semibold uppercase mb-2">Kepala Keluarga</p>
+              <p className="text-2xl text-gray-800 font-bold">[Isi jumlah] KK</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border-2 border-red-200 rounded-lg p-6 shadow-md mt-4">
+          <p className="text-gray-700 leading-relaxed text-lg">
+            <strong className="text-red-600">Komposisi Penduduk:</strong> Penduduk Desa Kiawa Satu mayoritas adalah keturunan asli suku Tountemboan yang telah menetap turun-temurun sejak abad ke-17, menjaga kelestarian budaya dan nilai-nilai tradisional.
+          </p>
+        </div>
+      </div>
+
+      {/* Potensi Desa */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          POTENSI DESA
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Pertanian */}
+          <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
+              <div className="flex items-center gap-3">
+                <Sprout className="w-6 h-6 text-white" />
+                <h4 className="text-lg font-bold text-white">Sektor Pertanian</h4>
+              </div>
+            </div>
+            <div className="p-6 space-y-2">
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Cabai Merah</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Cabai Keriting</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Tomat</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Labu</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Jagung</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Bawang Merah</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Nilam</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Peternakan */}
+          <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-white" />
+                <h4 className="text-lg font-bold text-white">Sektor Peternakan</h4>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="flex items-center gap-2 text-gray-700 text-lg">
+                <span className="w-3 h-3 bg-red-600 rounded-full"></span>
+                <span className="font-semibold">Peternakan Babi</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-4 leading-relaxed">
+                Merupakan salah satu sumber ekonomi utama masyarakat desa dengan pengelolaan yang berkelanjutan.
+              </p>
+            </div>
+          </div>
+
+          {/* Usaha Rumahan */}
+          <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
+              <div className="flex items-center gap-3">
+                <Home className="w-6 h-6 text-white" />
+                <h4 className="text-lg font-bold text-white">Usaha Rumahan</h4>
+              </div>
+            </div>
+            <div className="p-6 space-y-2">
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Kacang Shanghai</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Kue Telur</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                <span>Keripik</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Kesehatan Masyarakat */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          KESEHATAN MASYARAKAT
+        </h3>
+        <div className="bg-gradient-to-r from-green-50 to-white border-2 border-green-300 rounded-lg p-8 shadow-md">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-lg">
+              <CheckCircle2 className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 font-semibold uppercase">Jumlah Kasus Stunting</p>
+              <p className="text-3xl md:text-4xl font-bold text-green-600">Tidak Ada</p>
+            </div>
+          </div>
+          <p className="text-gray-700 leading-relaxed text-lg mt-6">
+            <strong>Pencapaian Luar Biasa:</strong> Tidak adanya kasus stunting menunjukkan komitmen pemerintah desa dan masyarakat dalam menjaga kesehatan dan gizi anak-anak dengan program-program yang efektif dan berkelanjutan.
+          </p>
+        </div>
+      </div>
+
+      {/* Warisan Budaya */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          WARISAN BUDAYA
+        </h3>
+
+        <div className="space-y-4">
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Landmark className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-red-600 mb-2">Batu Tumotowa</h4>
+                <p className="text-gray-700 leading-relaxed">
+                  Batu penjuru negeri yang ditancapkan sejak tahun 1650 sebagai penanda berdirinya kampung, terletak di ujung barat desa (samping SD Inpres Kiawa). Merupakan simbol penting dalam sejarah dan budaya Desa Kiawa Satu.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Landmark className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-red-600 mb-2">Waruga (Kuburan Batu)</h4>
+                <p className="text-gray-700 leading-relaxed">
+                  Terdapat sekitar 30 waruga yang tersebar di wilayah Nimawale, merupakan bukti peradaban masa lalu dan tempat himpunan orang-orang satria yang menunjukkan eksistensi masyarakat Tontemboan yang terhormat.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Compass className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-red-600 mb-2">Situs Tinincasan</h4>
+                <p className="text-gray-700 leading-relaxed">
+                  Bekas pemukiman pertama pada abad ke-15, terletak sekitar 5 km di sebelah barat Desa Kiawa Satu. Menjadi monumen bersejarah yang mencerminkan perjalanan panjang masyarakat dalam mencari tempat permukiman yang ideal.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pemekaran Desa */}
+      <div className="space-y-4">
+        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+          PEMEKARAN DESA
+        </h3>
+
+        <div className="space-y-3">
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                1
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">17 Oktober 1977</p>
+                <p className="text-lg text-gray-800 font-semibold">Desa Kiawa dimekarkan menjadi Desa Kiawa I dan Desa Kiawa II</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                2
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">17 September 2008</p>
+                <p className="text-lg text-gray-800 font-semibold">Desa Kiawa I dimekarkan menjadi 3 desa: Desa Kiawa Satu (Induk), Desa Kiawa Satu Barat, dan Desa Kiawa Satu Utara</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Komitmen */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-10 rounded-lg"></div>
+        <div className="relative bg-gradient-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-xl">
+          <div className="flex items-start gap-4">
+            <CheckCircle2 className="w-8 h-8 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="text-2xl font-bold mb-3">Komitmen Pemerintah Desa</h3>
+              <p className="text-red-50 leading-relaxed text-lg mb-4">
+                Pemerintah Desa Kiawa Satu berkomitmen untuk memberikan pelayanan terbaik kepada masyarakat, mengembangkan potensi desa secara berkelanjutan, meningkatkan kesejahteraan melalui pemberdayaan ekonomi lokal, serta melestarikan warisan budaya dan nilai-nilai gotong royong.
+              </p>
+              <p className="text-red-50 leading-relaxed text-lg font-semibold">
+                Dengan semangat <strong>"ESA"</strong> (Satu Hati, Satu Pikiran, Satu Tekad, Satu Program), Desa Kiawa Satu terus bergerak maju menuju masyarakat yang aman, damai, dan sejahtera.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const VisionMissionContent = () => {
@@ -422,7 +783,9 @@ export default function JelajahiDetailPage() {
             {jelajahi.title}
           </h1>
 
-          {jelajahi.isVisionMissionPage ? (
+          {jelajahi.isProfilPage ? (
+            <ProfilContent />
+          ) : jelajahi.isVisionMissionPage ? (
             <VisionMissionContent />
           ) : jelajahi.isHistoryPage ? (
             <HistoryContent />
