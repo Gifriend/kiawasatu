@@ -18,13 +18,14 @@ export default function StrukturOrganisasi() {
           {/* Level 1: Kepala Desa */}
           <div className="flex justify-center mb-16">
             <div className="bg-gradient-to-br from-red-600 to-red-700 text-white px-10 py-8 rounded-lg font-bold text-center text-lg shadow-lg hover:shadow-xl transition-shadow w-64 flex flex-col items-center">
-              <div className="w-36 h-36 mb-3 rounded-lg bg-white bg-opacity-20 flex items-center justify-center overflow-hidden">
+              <div className="w-36 h-44 mb-3 rounded-lg bg-white bg-opacity-20 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/hukum-tua.jpg" 
                   alt="Hukum Tua" 
-                  width={144} 
-                  height={144} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="144px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-lg">Hukum Tua</div>
@@ -35,30 +36,32 @@ export default function StrukturOrganisasi() {
           {/* Level 2: Sekretaris & Bendahara */}
           <div className="flex justify-center gap-12 md:gap-20 mb-16">
             <div className="bg-gradient-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center">
-              <div className="w-24 h-24 mb-3 rounded-lg bg-red-100 flex items-center justify-center overflow-hidden">
+              <div className="w-24 h-30 mb-3 rounded-lg bg-red-100 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/sekretaris-desa.jpg" 
                   alt="Sekretaris Desa" 
-                  width={96} 
-                  height={96} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="96px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-2">Sekretaris Desa</div>
               <div className="text-sm text-gray-600">Patrichia Lumintang, SE</div>
             </div>
             <div className="bg-gradient-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center">
-              <div className="w-24 h-24 mb-3 rounded-lg bg-red-100 flex items-center justify-center overflow-hidden">
+              <div className="w-24 h-30 mb-3 rounded-lg bg-red-100 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/bendahara-desa.jpg" 
                   alt="Bendahara Desa" 
-                  width={96} 
-                  height={96} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="96px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-2">Bendahara Desa</div>
-              <div className="text-sm text-gray-600">Gracella Mait</div>
+              <div className="text-sm text-gray-600">-</div>
             </div>
           </div>
 
@@ -66,13 +69,14 @@ export default function StrukturOrganisasi() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {/* Kasie Pemerintahan */}
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/kasie-pemerintahan.jpg" 
                   alt="Kasie Pemerintahan" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1 text-sm">Kasie Pemerintahan &<br/>Pembinaan Masyarakat</div>
@@ -81,13 +85,14 @@ export default function StrukturOrganisasi() {
 
             {/* Kasie Pelayanan */}
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/kasie-pelayanan.jpg" 
                   alt="Kasie Pelayanan" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1 text-sm">Kasie Pelayanan &<br/>Kesejahteraan</div>
@@ -96,13 +101,14 @@ export default function StrukturOrganisasi() {
 
             {/* Kaur Umum */}
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
-                  src="/images/struktur/kaur-umum.jpg" 
+                  src="/images/struktur/kaurumum.jpg" 
                   alt="Kaur Umum" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1 text-sm">Kaur Umum</div>
@@ -111,13 +117,14 @@ export default function StrukturOrganisasi() {
 
             {/* Kaur Perencanaan */}
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
-                  src="/images/struktur/kaur-perencanaan.jpg" 
+                  src="/images/struktur/kaurperencanaan.jpg" 
                   alt="Kaur Perencanaan" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1 text-sm">Kaur Perencanaan<br/>Pelaporan Keuangan</div>
@@ -128,27 +135,29 @@ export default function StrukturOrganisasi() {
           {/* Level 4: Kepala Jaga */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
-                  src="/images/struktur/kepala-jaga-1.jpg" 
+                  src="/images/struktur/kepalajaga1.jpg" 
                   alt="Kepala Jaga I" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1">Kepala Jaga I</div>
-              <div className="text-sm text-gray-600">Jorry Tambuwun</div>
+              <div className="text-sm text-gray-600">Claudio Najoan</div>
             </div>
 
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/kepala-jaga-2.jpg" 
                   alt="Kepala Jaga II" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1">Kepala Jaga II</div>
@@ -156,13 +165,14 @@ export default function StrukturOrganisasi() {
             </div>
 
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/kepala-jaga-3.jpg" 
                   alt="Kepala Jaga III" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1">Kepala Jaga III</div>
@@ -173,27 +183,29 @@ export default function StrukturOrganisasi() {
           {/* Level 5: Meweteng Jaga */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
-                  src="/images/struktur/meweteng-jaga-1.jpg" 
+                  src="/images/struktur/mewetengjaga1.jpg" 
                   alt="Meweteng Jaga I" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1">Meweteng Jaga I</div>
-              <div className="text-sm text-gray-600">Nova Walukow</div>
+              <div className="text-sm text-gray-600">Mora Mokalu</div>
             </div>
 
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
                   src="/images/struktur/meweteng-jaga-2.jpg" 
                   alt="Meweteng Jaga II" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1">Meweteng Jaga II</div>
@@ -201,13 +213,14 @@ export default function StrukturOrganisasi() {
             </div>
 
             <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-20 mb-2 rounded-lg bg-red-200 flex items-center justify-center overflow-hidden">
+              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
                 <Image 
-                  src="/images/struktur/meweteng-jaga-3.jpg" 
+                  src="/images/struktur/mewetengjaga3.jpg" 
                   alt="Meweteng Jaga III" 
-                  width={80} 
-                  height={80} 
-                  className="object-cover rounded"
+                  fill
+                  sizes="80px"
+                  className="object-cover object-top rounded"
+                  quality={100}
                 />
               </div>
               <div className="text-red-600 font-bold mb-1">Meweteng Jaga III</div>
