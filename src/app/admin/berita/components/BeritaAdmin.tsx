@@ -1,51 +1,62 @@
 "use client";
 
 import type React from "react";
-
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Plus, Edit2, Trash2, X } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation"; // 1. Import useRouter di sini
 
+// Interface yang BENAR (sesuai database baru)
 interface Berita {
   id: string;
   judul: string;
   konten: string;
   penulis: string;
-  foto_url: string | null;
+  foto_urls: string[] | null; // <-- PERUBAHAN KUNCI
   created_at: string;
 }
 
-export default function AdminDashboard() {
-  const router = useRouter();
+// Ganti nama 'BeritaAdminPage' ini jika file Anda namanya 'AdminDashboard'
+export default function BeritaAdminPage() { 
   const supabase = createClient();
+  const router = useRouter(); // 2. Panggil hook di top-level
+
   const [beritaList, setBeritaList] = useState<Berita[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  
   const [formData, setFormData] = useState({
     judul: "",
     konten: "",
-    foto: null as File | null,
     penulis: "",
   });
 
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
+  const [user, setUser] = useState<any>(null);
+
+  // 3. HAPUS 'useEffect' dan 'useState' untuk router yang error
+  // ... (Kode yang error sudah dihapus) ...
+
+  // 4. Perbarui useEffect ini
   useEffect(() => {
     const checkAuth = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        router.push("/auth/login");
+        router.push("/auth/login"); // Langsung gunakan 'router'
         return;
       }
       setUser(user);
-      loadBerita();
+      loadBerita(); 
     };
+    
     checkAuth();
-  }, []);
+
+  }, [router, supabase.auth]); // Tambahkan dependency yang benar
 
   const loadBerita = async () => {
     try {
@@ -65,33 +76,47 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, foto: file }));
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiles(e.target.files); 
+  };
+
+  const uploadImages = async (files: FileList): Promise<string[] | null> => {
+    try {
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const fileExt = file.name.split(".").pop();
+        const fileName = `${Date.now()}-${file.name}`;
+        const filePath = `berita/${fileName}`;
+
+        const { error } = await supabase.storage
+          .from("berita-images") 
+          .upload(filePath, file);
+
+        if (error) throw error;
+
+        const { data } = supabase.storage
+          .from("berita-images")
+          .getPublicUrl(filePath);
+        return data.publicUrl;
+      });
+
+      const urls = await Promise.all(uploadPromises);
+      return urls;
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      return null;
     }
   };
 
-  const uploadImage = async (file: File): Promise<string | null> => {
+  const deleteOldImages = async (fotoUrls: string[]) => {
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `berita/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("berita-images")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from("berita-images")
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
+      const filePaths = fotoUrls.map((url) => {
+        const parts = url.split("/");
+        return parts.slice(parts.length - 2).join("/"); // "berita/namafile.jpg"
+      });
+      await supabase.storage.from("berita-images").remove(filePaths);
+      console.log("Foto lama dihapus:", filePaths);
     } catch (error) {
-      console.error("Error uploading image:", error);
-      return null;
+      console.error("Error deleting old images:", error);
     }
   };
 
@@ -106,52 +131,43 @@ export default function AdminDashboard() {
     setIsSaving(true);
 
     try {
-      let fotoUrl = null;
+      let fotoUrls: string[] | null = null;
 
-      // Jika user upload foto baru
-      if (formData.foto) {
-        // Jika sedang edit dan sudah ada foto lama, hapus dulu
-        if (editingId) {
-          const oldBerita = beritaList.find((b) => b.id === editingId);
-          if (oldBerita?.foto_url) {
-            const oldPath = oldBerita.foto_url.split("/").slice(-2).join("/"); // ambil "berita/namafile.jpg"
-            await supabase.storage.from("berita-images").remove([oldPath]);
-            console.log("Foto lama dihapus:", oldPath);
-          }
+      if (files && files.length > 0) {
+        if (editingId && existingPhotos.length > 0) {
+          await deleteOldImages(existingPhotos);
         }
-
-        // Upload foto baru
-        fotoUrl = await uploadImage(formData.foto);
+        fotoUrls = await uploadImages(files);
+      } else if (editingId) {
+        fotoUrls = existingPhotos;
       }
 
       if (editingId) {
+        // Update
         const { error } = await supabase
           .from("berita")
           .update({
             judul: formData.judul,
             konten: formData.konten,
             penulis: formData.penulis,
-            ...(fotoUrl && { foto_url: fotoUrl }), // hanya ubah foto kalau ada upload baru
+            foto_urls: fotoUrls, // <-- PERUBAHAN KUNCI
           })
           .eq("id", editingId);
-
         if (error) throw error;
       } else {
+        // Insert
         const { error } = await supabase.from("berita").insert({
           judul: formData.judul,
           konten: formData.konten,
           penulis: formData.penulis,
-          foto_url: fotoUrl,
+          foto_urls: fotoUrls, // <-- PERUBAHAN KUNCI
         });
-
         if (error) throw error;
       }
 
       await loadBerita();
       resetForm();
-      alert(
-        editingId ? "Berita berhasil diupdate" : "Berita berhasil ditambahkan"
-      );
+      alert(editingId ? "Berita berhasil diupdate" : "Berita berhasil ditambahkan");
     } catch (error) {
       console.error("Error saving berita:", error);
       alert("Gagal menyimpan berita");
@@ -164,21 +180,22 @@ export default function AdminDashboard() {
     setFormData({
       judul: berita.judul,
       konten: berita.konten,
-      foto: null,
       penulis: berita.penulis,
     });
     setEditingId(berita.id);
+    setExistingPhotos(berita.foto_urls || []); 
     setShowForm(true);
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Apakah Anda yakin ingin menghapus berita ini?")) return;
-
     try {
+      const berita = beritaList.find((b) => b.id === id);
+      if (berita && berita.foto_urls && berita.foto_urls.length > 0) {
+        await deleteOldImages(berita.foto_urls);
+      }
       const { error } = await supabase.from("berita").delete().eq("id", id);
-
       if (error) throw error;
-
       await loadBerita();
       alert("Berita berhasil dihapus");
     } catch (error) {
@@ -188,14 +205,11 @@ export default function AdminDashboard() {
   };
 
   const resetForm = () => {
-    setFormData({ judul: "", konten: "", foto: null, penulis: "" });
+    setFormData({ judul: "", konten: "", penulis: "" });
+    setFiles(null); 
+    setExistingPhotos([]);
     setEditingId(null);
     setShowForm(false);
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
   };
 
   if (isLoading) {
@@ -225,13 +239,7 @@ export default function AdminDashboard() {
               className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
             >
               <Plus className="w-5 h-5" />
-              Tambah Berita
-            </button>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
-            >
-              Logout
+              {showForm ? "Tutup Form" : "Tambah Berita"}
             </button>
           </div>
         </div>
@@ -252,73 +260,66 @@ export default function AdminDashboard() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <InputForm
+                label="Judul"
+                name="judul"
+                value={formData.judul}
+                onChange={setFormData}
+                placeholder="Masukkan judul berita"
+              />
+              <TextAreaForm
+                label="Konten"
+                name="konten"
+                value={formData.konten}
+                onChange={setFormData}
+                placeholder="Masukkan konten berita"
+              />
+              <InputForm
+                label="Penulis"
+                name="penulis"
+                value={formData.penulis}
+                onChange={setFormData}
+                placeholder="Nama penulis"
+              />
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Judul
-                </label>
-                <input
-                  type="text"
-                  value={formData.judul}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, judul: e.target.value }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                  placeholder="Masukkan judul berita"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Konten
-                </label>
-                <textarea
-                  value={formData.konten}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, konten: e.target.value }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 h-32"
-                  placeholder="Masukkan konten berita"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Penulis
-                </label>
-                <input
-                  type="text"
-                  value={formData.penulis}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      penulis: e.target.value,
-                    }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                  placeholder="Nama penulis"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Foto
+                  Foto (Bisa lebih dari satu)
                 </label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
+                  multiple 
+                  onChange={handleImageChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
-                {formData.foto && (
+                
+                {/* Preview BARU untuk BANYAK file */}
+                {files && files.length > 0 && (
                   <div className="mt-2">
-                    <p className="text-sm text-gray-600 mb-2">Preview:</p>
-                    <img
-                      src={
-                        URL.createObjectURL(formData.foto) || "/placeholder.svg"
-                      }
-                      alt="Preview"
-                      className="h-32 object-cover rounded-lg"
-                    />
+                    <p className="text-sm text-gray-600 mb-2">Preview ({files.length} foto baru):</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {Array.from(files).map((file, index) => (
+                        <img
+                          key={index}
+                          src={URL.createObjectURL(file)}
+                          alt={`Preview ${index + 1}`}
+                          className="h-32 w-32 object-cover rounded-lg"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Preview untuk foto yang sudah ada (saat edit) */}
+                {editingId && existingPhotos.length > 0 && !files && (
+                  <div className="mt-2 text-sm text-gray-500">
+                    <p>Foto saat ini ({existingPhotos.length} foto):</p>
+                    <div className="flex gap-2 mt-2 flex-wrap">
+                      {existingPhotos.map(url => (
+                        <img key={url} src={url} alt="Foto lama" className="h-16 w-16 object-cover rounded"/>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -329,11 +330,7 @@ export default function AdminDashboard() {
                   disabled={isSaving}
                   className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition font-medium disabled:opacity-50"
                 >
-                  {isSaving
-                    ? "Menyimpan..."
-                    : editingId
-                    ? "Update Berita"
-                    : "Tambah Berita"}
+                  {isSaving ? "Menyimpan..." : (editingId ? "Update Berita" : "Tambah Berita")}
                 </button>
                 <button
                   type="button"
@@ -362,13 +359,20 @@ export default function AdminDashboard() {
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition"
               >
                 <div className="flex flex-col md:flex-row">
-                  {berita.foto_url && (
+                  
+                  {/* Tampilkan foto PERTAMA dari array */}
+                  {berita.foto_urls && berita.foto_urls.length > 0 ? (
                     <img
-                      src={berita.foto_url || "/placeholder.svg"}
+                      src={berita.foto_urls[0]} // <-- Ambil foto pertama
                       alt={berita.judul}
                       className="w-full md:w-48 h-48 object-cover"
                     />
+                  ) : (
+                    <div className="w-full md:w-48 h-48 bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">No Image</span>
+                    </div>
                   )}
+
                   <div className="flex-1 p-6 flex flex-col justify-between">
                     <div>
                       <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -413,3 +417,31 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+// Helper components (bisa diekstrak ke file sendiri)
+const InputForm = ({ label, name, value, onChange, placeholder }: any) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={(e) => onChange((prev: any) => ({ ...prev, [name]: e.target.value }))}
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+      placeholder={placeholder}
+    />
+  </div>
+);
+
+const TextAreaForm = ({ label, name, value, onChange, placeholder }: any) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={(e) => onChange((prev: any) => ({ ...prev, [name]: e.target.value }))}
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 h-32"
+      placeholder={placeholder}
+    />
+  </div>
+);

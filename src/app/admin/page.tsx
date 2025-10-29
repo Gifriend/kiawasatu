@@ -1,5 +1,5 @@
-import AdminDashboard from "./components/AdminDashboard";
+import Page from "./berita/page";
 
 export default function page(){
-    return <AdminDashboard/>
+    return <Page/>
 }

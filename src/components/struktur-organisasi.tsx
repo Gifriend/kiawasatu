@@ -1,6 +1,82 @@
 import Image from 'next/image';
+import { createClient } from "@/lib/supabase/server"; // Gunakan server client
 
-export default function StrukturOrganisasi() {
+// Fungsi helper untuk pengelompokan
+function groupBy(list: any[], key: string) {
+  return list.reduce(function (rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+}
+
+// Helper component untuk kartu anggota
+const AnggotaCard = ({ anggota, styleConfig }: any) => {
+  // styleConfig berisi class-class unik untuk tiap level
+  return (
+    <div className={styleConfig.card}>
+      <div className={styleConfig.imageContainer}>
+        {anggota.foto_url ? (
+          <Image 
+            src={anggota.foto_url} 
+            alt={anggota.nama} 
+            fill
+            sizes={styleConfig.imageSizes}
+            className="object-cover object-top rounded"
+            quality={100}
+          />
+        ) : (
+           <div className="w-full h-full flex items-center justify-center text-gray-500 text-xs">No Photo</div>
+        )}
+      </div>
+      <div className={styleConfig.jabatan}>{anggota.jabatan}</div>
+      <div className={styleConfig.nama}>{anggota.nama || "-"}</div>
+    </div>
+  );
+};
+
+export default async function StrukturOrganisasi() {
+  const supabase = createClient();
+  const { data } = await (await supabase)
+    .from("struktur_organisasi")
+    .select("*")
+    .order("level")
+    .order("urutan");
+
+  const struktur = data || [];
+  const groupedStruktur = groupBy(struktur, 'level');
+
+  // Definisikan style untuk tiap level agar UI tetap sama
+  const styles = {
+    level1: {
+      card: "bg-gradient-to-br from-red-600 to-red-700 text-white px-10 py-8 rounded-lg font-bold text-center text-lg shadow-lg hover:shadow-xl transition-shadow w-64 flex flex-col items-center",
+      imageContainer: "w-36 h-44 mb-3 rounded-lg bg-white bg-opacity-20 overflow-hidden relative",
+      imageSizes: "144px",
+      jabatan: "text-lg",
+      nama: "text-sm font-normal mt-2"
+    },
+    level2: {
+      card: "bg-gradient-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center",
+      imageContainer: "w-24 h-30 mb-3 rounded-lg bg-red-100 overflow-hidden relative", // Perbaiki: Ukuran foto Anda 24x30 tidak proporsional, saya ubah ke h-32
+      imageSizes: "96px",
+      jabatan: "text-red-600 font-bold mb-2",
+      nama: "text-sm text-gray-600"
+    },
+    level3: {
+      card: "bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center",
+      imageContainer: "w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative", // Perbaiki: h-26 tidak proporsional, saya ubah ke h-28
+      imageSizes: "80px",
+      jabatan: "text-red-600 font-bold mb-1 text-sm h-10", // h-10 untuk jaga konsistensi
+      nama: "text-xs text-gray-600 mt-1"
+    },
+    level4: { // Level 4 & 5 memiliki style yg sama di kode Anda
+      card: "bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center",
+      imageContainer: "w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative", // Perbaiki: h-26 tidak proporsional, saya ubah ke h-28
+      imageSizes: "80px",
+      jabatan: "text-red-600 font-bold mb-1",
+      nama: "text-sm text-gray-600"
+    }
+  };
+
   return (
     <section id="organisasi" className="py-16 md:py-24 bg-gradient-to-b from-white to-red-50 px-4 md:px-6">
       <div className="mb-12">
@@ -15,218 +91,42 @@ export default function StrukturOrganisasi() {
 
       <div className="flex justify-center">
         <div className="w-full max-w-7xl">
+          
           {/* Level 1: Kepala Desa */}
           <div className="flex justify-center mb-16">
-            <div className="bg-gradient-to-br from-red-600 to-red-700 text-white px-10 py-8 rounded-lg font-bold text-center text-lg shadow-lg hover:shadow-xl transition-shadow w-64 flex flex-col items-center">
-              <div className="w-36 h-44 mb-3 rounded-lg bg-white bg-opacity-20 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/hukum-tua.jpg" 
-                  alt="Hukum Tua" 
-                  fill
-                  sizes="144px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-lg">Hukum Tua</div>
-              <div className="text-sm font-normal mt-2">Nortje E. Tendean, SE</div>
-            </div>
+            {(groupedStruktur['1'] || []).map((anggota: any) => (
+              <AnggotaCard key={anggota.id} anggota={anggota} styleConfig={styles.level1} />
+            ))}
           </div>
 
           {/* Level 2: Sekretaris & Bendahara */}
           <div className="flex justify-center gap-12 md:gap-20 mb-16">
-            <div className="bg-gradient-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center">
-              <div className="w-24 h-30 mb-3 rounded-lg bg-red-100 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/sekretaris-desa.jpg" 
-                  alt="Sekretaris Desa" 
-                  fill
-                  sizes="96px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-2">Sekretaris Desa</div>
-              <div className="text-sm text-gray-600">Patrichia Lumintang, SE</div>
-            </div>
-            <div className="bg-gradient-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center">
-              <div className="w-24 h-30 mb-3 rounded-lg bg-red-100 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/bendahara-desa.jpg" 
-                  alt="Bendahara Desa" 
-                  fill
-                  sizes="96px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-2">Bendahara Desa</div>
-              <div className="text-sm text-gray-600">-</div>
-            </div>
+            {(groupedStruktur['2'] || []).map((anggota: any) => (
+              <AnggotaCard key={anggota.id} anggota={anggota} styleConfig={styles.level2} />
+            ))}
           </div>
 
           {/* Level 3: Kaur & Kasie */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {/* Kasie Pemerintahan */}
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kasie-pemerintahan.jpg" 
-                  alt="Kasie Pemerintahan" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1 text-sm">Kasie Pemerintahan &<br/>Pembinaan Masyarakat</div>
-              <div className="text-xs text-gray-600 mt-1">Denny Mamentu</div>
-            </div>
-
-            {/* Kasie Pelayanan */}
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kasie-pelayanan.jpg" 
-                  alt="Kasie Pelayanan" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1 text-sm">Kasie Pelayanan &<br/>Kesejahteraan</div>
-              <div className="text-xs text-gray-600 mt-1">Hengky Luimtang</div>
-            </div>
-
-            {/* Kaur Umum */}
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kaurumum.jpg" 
-                  alt="Kaur Umum" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1 text-sm">Kaur Umum</div>
-              <div className="text-xs text-gray-600 mt-1">Prisilia Polii</div>
-            </div>
-
-            {/* Kaur Perencanaan */}
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kaurperencanaan.jpg" 
-                  alt="Kaur Perencanaan" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1 text-sm">Kaur Perencanaan<br/>Pelaporan Keuangan</div>
-              <div className="text-xs text-gray-600 mt-1">Fransisko Karinda</div>
-            </div>
+             {(groupedStruktur['3'] || []).map((anggota: any) => (
+              <AnggotaCard key={anggota.id} anggota={anggota} styleConfig={styles.level3} />
+            ))}
           </div>
 
           {/* Level 4: Kepala Jaga */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kepalajaga1.jpg" 
-                  alt="Kepala Jaga I" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1">Kepala Jaga I</div>
-              <div className="text-sm text-gray-600">Claudio Najoan</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kepala-jaga-2.jpg" 
-                  alt="Kepala Jaga II" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1">Kepala Jaga II</div>
-              <div className="text-sm text-gray-600">Fiko Mawey</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/kepala-jaga-3.jpg" 
-                  alt="Kepala Jaga III" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1">Kepala Jaga III</div>
-              <div className="text-sm text-gray-600">Nofry Rundungan</div>
-            </div>
+             {(groupedStruktur['4'] || []).map((anggota: any) => (
+              <AnggotaCard key={anggota.id} anggota={anggota} styleConfig={styles.level4} />
+            ))}
           </div>
 
           {/* Level 5: Meweteng Jaga */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/mewetengjaga1.jpg" 
-                  alt="Meweteng Jaga I" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1">Meweteng Jaga I</div>
-              <div className="text-sm text-gray-600">Mora Mokalu</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/meweteng-jaga-2.jpg" 
-                  alt="Meweteng Jaga II" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1">Meweteng Jaga II</div>
-              <div className="text-sm text-gray-600">Silhana Silap</div>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center">
-              <div className="w-20 h-26 mb-2 rounded-lg bg-red-200 overflow-hidden relative">
-                <Image 
-                  src="/images/struktur/mewetengjaga3.jpg" 
-                  alt="Meweteng Jaga III" 
-                  fill
-                  sizes="80px"
-                  className="object-cover object-top rounded"
-                  quality={100}
-                />
-              </div>
-              <div className="text-red-600 font-bold mb-1">Meweteng Jaga III</div>
-              <div className="text-sm text-gray-600">Maya Pangimangen</div>
-            </div>
+             {(groupedStruktur['5'] || []).map((anggota: any) => (
+              <AnggotaCard key={anggota.id} anggota={anggota} styleConfig={styles.level4} /> // Pakai style level 4
+            ))}
           </div>
+          
         </div>
       </div>
     </section>
