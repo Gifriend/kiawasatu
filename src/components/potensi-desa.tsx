@@ -51,7 +51,7 @@ export default function PotensiDesa() {
             <div key={item.id} className="relative">
               <button
                 onClick={() => setOpenDropdown(isOpen ? null : item.id)}
-                className="w-full bg-gradient-to-br from-red-50 to-white border-2 border-red-100 rounded-xl p-8 hover:border-red-300 hover:shadow-xl transition-all text-left group"
+                className="w-full bg-linear-to-br from-red-50 to-white border-2 border-red-100 rounded-xl p-8 hover:border-red-300 hover:shadow-xl transition-all text-left group"
               >
                 <IconComponent className="w-16 h-16 text-red-600 mb-6 group-hover:scale-110 transition-transform" />
                 <h3 className="text-2xl font-bold text-red-600 mb-4">{item.title}</h3>

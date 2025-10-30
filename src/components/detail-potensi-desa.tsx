@@ -56,8 +56,8 @@ export default function DetailPotensiDesa({
               className="object-cover"
               priority
             />
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            {/* Overlay linear */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
           </div>
         </div>
 
@@ -74,7 +74,7 @@ export default function DetailPotensiDesa({
             return (
               <div key={index} className="border-l-4 border-red-600 pl-6 md:pl-8">
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                  <div className="shrink-0 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-lg">
                       {letterMap[index] || ''}
                     </span>

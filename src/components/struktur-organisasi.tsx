@@ -44,7 +44,7 @@ export default async function StrukturOrganisasi() {
 
   const styles = {
     level1: {
-      card: "bg-gradient-to-br from-red-600 to-red-700 text-white px-10 py-8 rounded-lg font-bold text-center text-lg shadow-lg hover:shadow-xl transition-shadow w-64 flex flex-col items-center",
+      card: "bg-linear-to-br from-red-600 to-red-700 text-white px-10 py-8 rounded-lg font-bold text-center text-lg shadow-lg hover:shadow-xl transition-shadow w-64 flex flex-col items-center",
       imageContainer:
         "w-36 h-44 mb-3 rounded-lg bg-white bg-opacity-20 overflow-hidden relative",
       imageSizes: "144px",
@@ -52,7 +52,7 @@ export default async function StrukturOrganisasi() {
       nama: "text-sm font-normal mt-2",
     },
     level2: {
-      card: "bg-gradient-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center",
+      card: "bg-linear-to-br from-red-50 to-white px-8 py-6 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors w-56 shadow-md flex flex-col items-center",
       imageContainer:
         "w-24 h-32 mb-3 rounded-lg bg-red-100 overflow-hidden relative",
       imageSizes: "96px",
@@ -60,7 +60,7 @@ export default async function StrukturOrganisasi() {
       nama: "text-sm text-gray-600",
     },
     level3: {
-      card: "bg-gradient-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center",
+      card: "bg-linear-to-br from-red-100 to-white px-6 py-5 rounded-lg text-center font-semibold border-2 border-red-400 hover:border-red-600 transition-colors shadow-md flex flex-col items-center",
       imageContainer:
         "w-20 h-28 mb-2 rounded-lg bg-red-200 overflow-hidden relative",
       imageSizes: "80px",
@@ -69,7 +69,7 @@ export default async function StrukturOrganisasi() {
       nama: "text-xs text-gray-600 mt-1",
     },
     level4: {
-      card: "bg-gradient-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center",
+      card: "bg-linear-to-br from-red-100 to-white px-6 py-4 rounded-lg text-center font-semibold border-2 border-red-500 hover:border-red-700 transition-colors shadow-md flex flex-col items-center",
       imageContainer:
         "w-20 h-28 mb-2 rounded-lg bg-red-200 overflow-hidden relative",
       imageSizes: "80px",
@@ -81,7 +81,7 @@ export default async function StrukturOrganisasi() {
   return (
     <section
       id="organisasi"
-      className="py-16 md:py-24 bg-gradient-to-b from-white to-red-50 px-4 md:px-6"
+      className="py-16 md:py-24 bg-linear-to-b from-white to-red-50 px-4 md:px-6"
     >
       <div className="mb-12">
         <h2 className="text-4xl md:text-5xl font-bold text-red-600 uppercase tracking-wider mb-6">

@@ -42,7 +42,7 @@ export default function JelajahiDesa() {
             <Link
               key={card.id}
               href={`/jelajahi/${card.id}`}
-              className="bg-gradient-to-br from-red-50 to-white p-8 rounded-lg shadow-md border border-red-100 hover:shadow-xl hover:border-red-300 hover:scale-105 transition-all duration-300 text-left group cursor-pointer block"
+              className="bg-linear-to-br from-red-50 to-white p-8 rounded-lg shadow-md border border-red-100 hover:shadow-xl hover:border-red-300 hover:scale-105 transition-all duration-300 text-left group cursor-pointer block"
             >
               <div className="mb-4">
                 <IconComponent className="w-16 h-16 text-red-600 group-hover:scale-110 transition-transform duration-300" />

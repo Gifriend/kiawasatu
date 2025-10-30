@@ -1,15 +1,17 @@
-"use client"
+"use client";
 
-import { useParams, useRouter } from "next/navigation"
-import NavbarWithAuth from "@/components/navbar"
-import Footer from "@/components/footer"
-import { ArrowLeft, Target, Compass, CheckCircle2, Landmark, MapPin, Globe, Flag, Building2, Users, Sprout, Home, TrendingUp } from "lucide-react"
+import { useParams, useRouter } from "next/navigation";
+import NavbarWithAuth from "@/components/navbar";
+import Footer from "@/components/footer";
+import { ArrowLeft, Target, Compass, CheckCircle2, Landmark, MapPin, Globe, Flag, Building2, Users, Sprout, Home, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const JELAJAHI_DATA: Record<string, { title: string; content?: string; isHistoryPage?: boolean; isVisionMissionPage?: boolean; isProfilPage?: boolean }> = {
-profil: {
-  title: "Profil Desa",
-  isProfilPage: true,
-},
+  profil: {
+    title: "Profil Desa",
+    isProfilPage: true,
+  },
   sejarah: {
     title: "Sejarah Desa",
     isHistoryPage: true,
@@ -18,13 +20,51 @@ profil: {
     title: "Visi & Misi",
     isVisionMissionPage: true,
   },
-}
+};
 
 const ProfilContent = () => {
+  // 2. Buat state untuk menampung data
+  const [infoDesa, setInfoDesa] = useState({
+    jumlah_penduduk: "[Loading...]",
+    jumlah_kk: "[Loading...]",
+    luas_wilayah: "[Loading...]",
+  });
+  const supabase = createClient();
+
+  // 3. Ambil data saat komponen dimuat
+  useEffect(() => {
+    const fetchInfoDesa = async () => {
+      const { data, error } = await supabase.from("info_desa").select("*");
+      
+      if (data) {
+        // Ubah array data menjadi objek yang mudah diakses
+        const formattedData = data.reduce((acc, item) => {
+          acc[item.nama_info] = item.nilai_info;
+          return acc;
+        }, {} as Record<string, string>);
+        
+        setInfoDesa({
+          jumlah_penduduk: formattedData.jumlah_penduduk || "N/A",
+          jumlah_kk: formattedData.jumlah_kk || "N/A",
+          luas_wilayah: formattedData.luas_wilayah || "N/A",
+        });
+      } else {
+        console.error("Gagal mengambil info desa:", error);
+        setInfoDesa({ // Set nilai default jika gagal fetch
+          jumlah_penduduk: "N/A",
+          jumlah_kk: "N/A",
+          luas_wilayah: "N/A",
+        });
+      }
+    };
+
+    fetchInfoDesa();
+  }, [supabase]); // Jangan lupa tambahkan dependency
+
   return (
     <div className="space-y-16">
       {/* Header Intro */}
-      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-lg">
+      <div className="bg-linear-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-lg">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">TENTANG DESA KIAWA SATU</h2>
         <p className="text-red-50 text-lg leading-relaxed">
           Desa Kiawa Satu merupakan desa yang memiliki sejarah panjang sejak abad ke-15, dengan penduduk yang merupakan keturunan dari kelompok masyarakat Tontemboan berasal dari pembagian Tanah Malesung di Batu Pinawetengan pada abad ke-10.
@@ -61,7 +101,7 @@ const ProfilContent = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Landmark className="w-6 h-6 text-red-600" />
               </div>
               <div>
@@ -73,7 +113,7 @@ const ProfilContent = () => {
 
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <MapPin className="w-6 h-6 text-red-600" />
               </div>
               <div>
@@ -85,7 +125,7 @@ const ProfilContent = () => {
 
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Globe className="w-6 h-6 text-red-600" />
               </div>
               <div>
@@ -97,7 +137,7 @@ const ProfilContent = () => {
 
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Flag className="w-6 h-6 text-red-600" />
               </div>
               <div>
@@ -109,19 +149,20 @@ const ProfilContent = () => {
 
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all md:col-span-2">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Building2 className="w-6 h-6 text-red-600" />
               </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-600 font-semibold uppercase mb-1">Luas Wilayah</p>
-                <p className="text-lg text-gray-800 font-bold">[Isi luas wilayah] hektar</p>
+                {/* 4. Ganti data statis dengan state */}
+                <p className="text-lg text-gray-800 font-bold">{infoDesa.luas_wilayah} hektar</p>
               </div>
             </div>
           </div>
 
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all md:col-span-2">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Users className="w-6 h-6 text-red-600" />
               </div>
               <div className="flex-1">
@@ -140,19 +181,21 @@ const ProfilContent = () => {
           DEMOGRAFI
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+          <div className="bg-linear-to-br from-red-50 to-white border-2 border-red-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="text-center">
               <Users className="w-8 h-8 text-red-600 mx-auto mb-3" />
               <p className="text-sm text-gray-600 font-semibold uppercase mb-2">Jumlah Penduduk</p>
-              <p className="text-2xl text-gray-800 font-bold">[Isi jumlah] jiwa</p>
+              {/* 5. Ganti data statis dengan state */}
+              <p className="text-2xl text-gray-800 font-bold">{infoDesa.jumlah_penduduk} jiwa</p>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+          <div className="bg-linear-to-br from-red-50 to-white border-2 border-red-200 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="text-center">
               <Home className="w-8 h-8 text-red-600 mx-auto mb-3" />
               <p className="text-sm text-gray-600 font-semibold uppercase mb-2">Kepala Keluarga</p>
-              <p className="text-2xl text-gray-800 font-bold">[Isi jumlah] KK</p>
+              {/* 6. Ganti data statis dengan state */}
+              <p className="text-2xl text-gray-800 font-bold">{infoDesa.jumlah_kk} KK</p>
             </div>
           </div>
         </div>
@@ -170,126 +213,127 @@ const ProfilContent = () => {
           <span className="w-1 h-10 bg-red-600 rounded-full"></span>
           POTENSI DESA
         </h3>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Pertanian */}
-          <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
-              <div className="flex items-center gap-3">
-                <Sprout className="w-6 h-6 text-white" />
-                <h4 className="text-lg font-bold text-white">Sektor Pertanian</h4>
-              </div>
-            </div>
-            <div className="p-6 space-y-2">
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Cabai Merah</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Cabai Keriting</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Tomat</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Labu</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Jagung</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Bawang Merah</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Nilam</span>
-              </div>
-            </div>
-          </div>
+          {/* ... (Pertanian, Peternakan, Usaha Rumahan - tidak perlu diubah) ... */}
+            {/* Pertanian */}
+         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
+           <div className="bg-linear-to-r from-red-600 to-red-700 p-4">
+             <div className="flex items-center gap-3">
+               <Sprout className="w-6 h-6 text-white" />
+               <h4 className="text-lg font-bold text-white">Sektor Pertanian</h4>
+             </div>
+           </div>
+           <div className="p-6 space-y-2">
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Cabai Merah</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Cabai Keriting</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Tomat</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Labu</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Jagung</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Bawang Merah</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Nilam</span>
+             </div>
+           </div>
+         </div>
 
-          {/* Peternakan */}
-          <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-6 h-6 text-white" />
-                <h4 className="text-lg font-bold text-white">Sektor Peternakan</h4>
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center gap-2 text-gray-700 text-lg">
-                <span className="w-3 h-3 bg-red-600 rounded-full"></span>
-                <span className="font-semibold">Peternakan Babi</span>
-              </div>
-              <p className="text-gray-600 text-sm mt-4 leading-relaxed">
-                Merupakan salah satu sumber ekonomi utama masyarakat desa dengan pengelolaan yang berkelanjutan.
-              </p>
-            </div>
-          </div>
+         {/* Peternakan */}
+         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
+           <div className="bg-linear-to-r from-red-600 to-red-700 p-4">
+             <div className="flex items-center gap-3">
+               <TrendingUp className="w-6 h-6 text-white" />
+               <h4 className="text-lg font-bold text-white">Sektor Peternakan</h4>
+             </div>
+           </div>
+           <div className="p-6">
+             <div className="flex items-center gap-2 text-gray-700 text-lg">
+               <span className="w-3 h-3 bg-red-600 rounded-full"></span>
+               <span className="font-semibold">Peternakan Babi</span>
+             </div>
+             <p className="text-gray-600 text-sm mt-4 leading-relaxed">
+               Merupakan salah satu sumber ekonomi utama masyarakat desa dengan pengelolaan yang berkelanjutan.
+             </p>
+           </div>
+         </div>
 
-          {/* Usaha Rumahan */}
-          <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
-              <div className="flex items-center gap-3">
-                <Home className="w-6 h-6 text-white" />
-                <h4 className="text-lg font-bold text-white">Usaha Rumahan</h4>
-              </div>
-            </div>
-            <div className="p-6 space-y-2">
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Kacang Shanghai</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Kue Telur</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                <span>Keripik</span>
-              </div>
-            </div>
-          </div>
+         {/* Usaha Rumahan */}
+         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all border-t-4 border-red-600 overflow-hidden">
+           <div className="bg-linear-to-r from-red-600 to-red-700 p-4">
+             <div className="flex items-center gap-3">
+               <Home className="w-6 h-6 text-white" />
+               <h4 className="text-lg font-bold text-white">Usaha Rumahan</h4>
+             </div>
+           </div>
+           <div className="p-6 space-y-2">
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Kacang Shanghai</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Kue Telur</span>
+             </div>
+             <div className="flex items-center gap-2 text-gray-700">
+               <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+               <span>Keripik</span>
+             </div>
+           </div>
+         </div>
         </div>
       </div>
 
       {/* Kesehatan Masyarakat */}
       <div className="space-y-4">
-        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
-          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
-          KESEHATAN MASYARAKAT
-        </h3>
-        <div className="bg-gradient-to-r from-green-50 to-white border-2 border-green-300 rounded-lg p-8 shadow-md">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-lg">
-              <CheckCircle2 className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 font-semibold uppercase">Jumlah Kasus Stunting</p>
-              <p className="text-3xl md:text-4xl font-bold text-green-600">Tidak Ada</p>
-            </div>
-          </div>
-          <p className="text-gray-700 leading-relaxed text-lg mt-6">
-            <strong>Pencapaian Luar Biasa:</strong> Tidak adanya kasus stunting menunjukkan komitmen pemerintah desa dan masyarakat dalam menjaga kesehatan dan gizi anak-anak dengan program-program yang efektif dan berkelanjutan.
-          </p>
-        </div>
+        {/* ... (Konten Kesehatan - tidak perlu diubah) ... */}
+         <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+           <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+           KESEHATAN MASYARAKAT
+         </h3>
+         <div className="bg-linear-to-r from-green-50 to-white border-2 border-green-300 rounded-lg p-8 shadow-md">
+           <div className="flex items-center gap-4 mb-4">
+             <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center shadow-lg">
+               <CheckCircle2 className="w-8 h-8 text-white" />
+             </div>
+             <div>
+               <p className="text-sm text-gray-600 font-semibold uppercase">Jumlah Kasus Stunting</p>
+               <p className="text-3xl md:text-4xl font-bold text-green-600">Tidak Ada</p>
+             </div>
+           </div>
+           <p className="text-gray-700 leading-relaxed text-lg mt-6">
+             <strong>Pencapaian Luar Biasa:</strong> Tidak adanya kasus stunting menunjukkan komitmen pemerintah desa dan masyarakat dalam menjaga kesehatan dan gizi anak-anak dengan program-program yang efektif dan berkelanjutan.
+           </p>
+         </div>
       </div>
 
       {/* Warisan Budaya */}
       <div className="space-y-4">
+        {/* ... (Konten Warisan Budaya - tidak perlu diubah) ... */}
         <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
           <span className="w-1 h-10 bg-red-600 rounded-full"></span>
           WARISAN BUDAYA
         </h3>
-
         <div className="space-y-4">
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Landmark className="w-6 h-6 text-red-600" />
               </div>
               <div className="flex-1">
@@ -300,10 +344,9 @@ const ProfilContent = () => {
               </div>
             </div>
           </div>
-
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Landmark className="w-6 h-6 text-red-600" />
               </div>
               <div className="flex-1">
@@ -314,10 +357,9 @@ const ProfilContent = () => {
               </div>
             </div>
           </div>
-
           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
             <div className="flex gap-4">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                 <Compass className="w-6 h-6 text-red-600" />
               </div>
               <div className="flex-1">
@@ -333,62 +375,65 @@ const ProfilContent = () => {
 
       {/* Pemekaran Desa */}
       <div className="space-y-4">
-        <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
-          <span className="w-1 h-10 bg-red-600 rounded-full"></span>
-          PEMEKARAN DESA
-        </h3>
-
-        <div className="space-y-3">
-          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                1
-              </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">17 Oktober 1977</p>
-                <p className="text-lg text-gray-800 font-semibold">Desa Kiawa dimekarkan menjadi Desa Kiawa I dan Desa Kiawa II</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                2
-              </div>
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 font-semibold uppercase mb-1">17 September 2008</p>
-                <p className="text-lg text-gray-800 font-semibold">Desa Kiawa I dimekarkan menjadi 3 desa: Desa Kiawa Satu (Induk), Desa Kiawa Satu Barat, dan Desa Kiawa Satu Utara</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* ... (Konten Pemekaran Desa - tidak perlu diubah) ... */}
+         <h3 className="text-3xl font-bold text-red-600 mb-6 flex items-center gap-3">
+           <span className="w-1 h-10 bg-red-600 rounded-full"></span>
+           PEMEKARAN DESA
+         </h3>
+         <div className="space-y-3">
+           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+             <div className="flex items-start gap-4">
+               <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold shrink-0">
+                 1
+               </div>
+               <div className="flex-1">
+                 <p className="text-sm text-gray-600 font-semibold uppercase mb-1">17 Oktober 1977</p>
+                 <p className="text-lg text-gray-800 font-semibold">Desa Kiawa dimekarkan menjadi Desa Kiawa I dan Desa Kiawa II</p>
+               </div>
+             </div>
+           </div>
+           <div className="bg-white border-l-4 border-red-600 rounded-lg p-6 shadow-md hover:shadow-lg transition-all">
+             <div className="flex items-start gap-4">
+               <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold shrink-0">
+                 2
+               </div>
+               <div className="flex-1">
+                 <p className="text-sm text-gray-600 font-semibold uppercase mb-1">17 September 2008</p>
+                 <p className="text-lg text-gray-800 font-semibold">Desa Kiawa I dimekarkan menjadi 3 desa: Desa Kiawa Satu (Induk), Desa Kiawa Satu Barat, dan Desa Kiawa Satu Utara</p>
+               </div>
+             </div>
+           </div>
+         </div>
       </div>
 
       {/* Komitmen */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-10 rounded-lg"></div>
-        <div className="relative bg-gradient-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-xl">
-          <div className="flex items-start gap-4">
-            <CheckCircle2 className="w-8 h-8 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="text-2xl font-bold mb-3">Komitmen Pemerintah Desa</h3>
-              <p className="text-red-50 leading-relaxed text-lg mb-4">
-                Pemerintah Desa Kiawa Satu berkomitmen untuk memberikan pelayanan terbaik kepada masyarakat, mengembangkan potensi desa secara berkelanjutan, meningkatkan kesejahteraan melalui pemberdayaan ekonomi lokal, serta melestarikan warisan budaya dan nilai-nilai gotong royong.
-              </p>
-              <p className="text-red-50 leading-relaxed text-lg font-semibold">
-                Dengan semangat <strong>"ESA"</strong> (Satu Hati, Satu Pikiran, Satu Tekad, Satu Program), Desa Kiawa Satu terus bergerak maju menuju masyarakat yang aman, damai, dan sejahtera.
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* ... (Konten Komitmen - tidak perlu diubah) ... */}
+         <div className="absolute inset-0 bg-linear-to-r from-red-600 to-red-700 opacity-10 rounded-lg"></div>
+         <div className="relative bg-linear-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-xl">
+           <div className="flex items-start gap-4">
+             <CheckCircle2 className="w-8 h-8 shrink-0 mt-1" />
+             <div>
+               <h3 className="text-2xl font-bold mb-3">Komitmen Pemerintah Desa</h3>
+               <p className="text-red-50 leading-relaxed text-lg mb-4">
+                 Pemerintah Desa Kiawa Satu berkomitmen untuk memberikan pelayanan terbaik kepada masyarakat, mengembangkan potensi desa secara berkelanjutan, meningkatkan kesejahteraan melalui pemberdayaan ekonomi lokal, serta melestarikan warisan budaya dan nilai-nilai gotong royong.
+               </p>
+               <p className="text-red-50 leading-relaxed text-lg font-semibold">
+                 Dengan semangat <strong>"ESA"</strong> (Satu Hati, Satu Pikiran, Satu Tekad, Satu Program), Desa Kiawa Satu terus bergerak maju menuju masyarakat yang aman, damai, dan sejahtera.
+               </p>
+             </div>
+           </div>
+         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+// --- AKHIR KOMPONEN PROFIL CONTENT ---
 
+// --- KOMPONEN LAINNYA (VisionMission, History) ---
 const VisionMissionContent = () => {
-  const misiItems = [
+  // ... (Kode VisionMissionContent Anda tidak perlu diubah) ...
+   const misiItems = [
     "Peningkatan Mutu Pelayanan Pemerintahan Desa Kepada Masyarakat",
     "Pengembangan Koordinasi Pelaksanaan Program dan Kebijakan Pemerintah Pusat dan Daerah Serta Perintisan, Perbaikan Sarana dan Prasarana Pedesaan",
     "Peningkatan Potensi Sumber Daya Manusia Melalui Pendidikan Bermutu, Kesehatan dan Pengembangan Minat Bakat Generasi Muda",
@@ -401,7 +446,7 @@ const VisionMissionContent = () => {
       {/* VISI */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
         <div className="lg:col-span-1 flex justify-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg">
+          <div className="w-24 h-24 bg-linear-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg">
             <Target className="w-12 h-12 text-white" />
           </div>
         </div>
@@ -410,7 +455,7 @@ const VisionMissionContent = () => {
             <span className="w-1 h-10 bg-red-600 rounded-full"></span>
             VISI
           </h2>
-          <div className="bg-gradient-to-r from-red-50 to-white p-8 rounded-lg border-l-4 border-red-600 shadow-lg">
+          <div className="bg-linear-to-r from-red-50 to-white p-8 rounded-lg border-l-4 border-red-600 shadow-lg">
             <p className="text-gray-800 text-lg leading-relaxed font-semibold">
               "Memberi Diri, Berjuang, Bekerja dan Mengabdi untuk Kepentingan dan Kesejahteraan Masyarakat Desa Kiawa Satu"
             </p>
@@ -421,13 +466,13 @@ const VisionMissionContent = () => {
       {/* MISI */}
       <div className="space-y-6">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-24 h-24 bg-gradient-to-br from-white to-red-50 rounded-full flex items-center justify-center shadow-lg border-2 border-red-600">
+          <div className="w-24 h-24 bg-linear-to-br from-white to-red-50 rounded-full flex items-center justify-center shadow-lg border-2 border-red-600">
             <Compass className="w-12 h-12 text-red-600" />
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-red-600">MISI</h2>
         </div>
 
-        <div className="bg-gradient-to-r from-white to-red-50 p-8 rounded-lg border-l-4 border-red-600 shadow-lg mb-8">
+        <div className="bg-linear-to-r from-white to-red-50 p-8 rounded-lg border-l-4 border-red-600 shadow-lg mb-8">
           <p className="text-gray-800 text-lg leading-relaxed font-semibold mb-4">
             Mewujudkan masyarakat Desa Kiawa Satu yang <span className="text-red-600 font-bold">"ESA"</span>
           </p>
@@ -467,7 +512,7 @@ const VisionMissionContent = () => {
             <div key={index} className="group">
               <div className="bg-white border-2 border-red-200 rounded-lg p-6 shadow hover:shadow-lg transition-all duration-300 hover:border-red-600 h-full">
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-red-600 text-white font-bold">
                       {index + 1}
                     </div>
@@ -486,10 +531,10 @@ const VisionMissionContent = () => {
 
       {/* PENUTUP */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-10 rounded-lg"></div>
-        <div className="relative bg-gradient-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-xl">
+        <div className="absolute inset-0 bg-linear-to-r from-red-600 to-red-700 opacity-10 rounded-lg"></div>
+        <div className="relative bg-linear-to-r from-red-600 to-red-700 text-white p-8 md:p-12 rounded-lg shadow-xl">
           <div className="flex items-start gap-4">
-            <CheckCircle2 className="w-8 h-8 flex-shrink-0 mt-1" />
+            <CheckCircle2 className="w-8 h-8 shrink-0 mt-1" />
             <div>
               <h3 className="text-2xl font-bold mb-3">Komitmen Kami</h3>
               <p className="text-red-50 leading-relaxed text-lg">
@@ -501,9 +546,10 @@ const VisionMissionContent = () => {
       </div>
     </div>
   )
-}
+};
 
 const HistoryContent = () => {
+  // ... (Kode HistoryContent Anda tidak perlu diubah) ...
   const kepalaWalak = [
     { no: 1, tahun: "Tahun 1650-1670", nama: "Keintjem, Palar, Toporundeng, Pesik" },
     { no: 2, tahun: "Tahun 1670-1750", nama: "Lumanaw" },
@@ -720,7 +766,7 @@ const HistoryContent = () => {
       </div>
 
       {/* Panitia Pemekaran */}
-      <div className="space-y-4 bg-gradient-to-r from-red-50 to-white p-6 rounded-lg border-2 border-red-200">
+      <div className="space-y-4 bg-linear-to-r from-red-50 to-white p-6 rounded-lg border-2 border-red-200">
         <h3 className="text-2xl font-semibold text-red-600 mb-4">Panitia Pemekaran Desa Kiawa I (2008)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {panitiaPemekaran.map((item, index) => (
@@ -738,7 +784,7 @@ const HistoryContent = () => {
       </div>
 
       {/* Penutup */}
-      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white p-8 rounded-lg shadow-lg">
+      <div className="bg-linear-to-r from-red-600 to-red-700 text-white p-8 rounded-lg shadow-lg">
         <h3 className="text-2xl font-bold mb-4">Warisan Budaya yang Tetap Terjaga</h3>
         <p className="leading-relaxed text-lg">
           Sejarah panjang Desa Kiawa I mencerminkan kearifan nenek moyang dalam membangun peradaban yang harmonis dengan alam. Dari Batu Pinawetengan hingga pemekaran desa di era modern, semangat gotong royong dan nilai-nilai budaya Minahasa tetap menjadi fondasi kehidupan masyarakat.
@@ -746,13 +792,18 @@ const HistoryContent = () => {
       </div>
     </div>
   )
-}
+};
+// --- AKHIR KOMPONEN LAINNYA ---
 
+
+// --- KOMPONEN UTAMA ---
 export default function JelajahiDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const jelajahi = JELAJAHI_DATA[params.id as keyof typeof JELAJAHI_DATA]
+  const params = useParams();
+  const router = useRouter();
+  const pageId = params.id as keyof typeof JELAJAHI_DATA; // Ambil ID dari URL
+  const jelajahi = JELAJAHI_DATA[pageId];
 
+  // Penanganan jika ID tidak valid
   if (!jelajahi) {
     return (
       <main>
@@ -762,7 +813,7 @@ export default function JelajahiDetailPage() {
         </div>
         <Footer />
       </main>
-    )
+    );
   }
 
   return (
@@ -783,6 +834,7 @@ export default function JelajahiDetailPage() {
             {jelajahi.title}
           </h1>
 
+          {/* Render konten berdasarkan flag yang ada */}
           {jelajahi.isProfilPage ? (
             <ProfilContent />
           ) : jelajahi.isVisionMissionPage ? (
@@ -790,8 +842,9 @@ export default function JelajahiDetailPage() {
           ) : jelajahi.isHistoryPage ? (
             <HistoryContent />
           ) : (
+            // Fallback jika tidak ada flag khusus
             <div className="prose prose-lg max-w-none">
-              <div className="text-gray-700 leading-relaxed whitespace-pre-line text-lg">{jelajahi.content}</div>
+              <div className="text-gray-700 leading-relaxed whitespace-pre-line text-lg">{jelajahi.content || "Konten tidak tersedia."}</div>
             </div>
           )}
         </div>
@@ -799,5 +852,5 @@ export default function JelajahiDetailPage() {
 
       <Footer />
     </main>
-  )
+  );
 }

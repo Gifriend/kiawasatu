@@ -11,19 +11,19 @@ export default function KontakKami() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-100 rounded-lg p-8 text-center hover:border-red-300 hover:shadow-lg transition-all">
+        <div className="bg-linear-to-br from-red-50 to-white border-2 border-red-100 rounded-lg p-8 text-center hover:border-red-300 hover:shadow-lg transition-all">
           <MapPin className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h3 className="font-bold text-lg text-red-600 mb-3">Alamat</h3>
           <p className="text-gray-600 leading-relaxed">Desa Kiawa Satu, Kabupaten Minahasa, Sulawesi Utara</p>
         </div>
 
-        <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-100 rounded-lg p-8 text-center hover:border-red-300 hover:shadow-lg transition-all">
+        <div className="bg-linear-to-br from-red-50 to-white border-2 border-red-100 rounded-lg p-8 text-center hover:border-red-300 hover:shadow-lg transition-all">
           <Phone className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h3 className="font-bold text-lg text-red-600 mb-3">Telepon</h3>
           <p className="text-gray-600 leading-relaxed">(0431) 123-4567</p>
         </div>
 
-        <div className="bg-gradient-to-br from-red-50 to-white border-2 border-red-100 rounded-lg p-8 text-center hover:border-red-300 hover:shadow-lg transition-all">
+        <div className="bg-linear-to-br from-red-50 to-white border-2 border-red-100 rounded-lg p-8 text-center hover:border-red-300 hover:shadow-lg transition-all">
           <Mail className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h3 className="font-bold text-lg text-red-600 mb-3">Email</h3>
           <p className="text-gray-600 leading-relaxed">info@desakiawasatu.id</p>

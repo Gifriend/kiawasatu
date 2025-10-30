@@ -164,7 +164,7 @@ export default function PotensiDetailPage() {
     <main>
       <NavbarWithAuth />
 
-      <div className="w-full bg-gradient-to-b from-gray-50 to-white">
+      <div className="w-full bg-linear-to-b from-gray-50 to-white">
         {/* Hero Image Section with Slider */}
         <div className="w-full bg-white shadow-sm">
           <div className="max-w-7xl mx-auto">
@@ -183,7 +183,7 @@ export default function PotensiDetailPage() {
                     className="object-cover"
                     priority={index === 0}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
                 </div>
               ))}
 
@@ -283,7 +283,7 @@ export default function PotensiDetailPage() {
                   className="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="flex items-start gap-5 mb-5">
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                    <div className="shrink-0 w-12 h-12 bg-linear-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                       <span className="text-white font-bold text-xl">
                         {letterMap[index] || ""}
                       </span>
@@ -304,7 +304,7 @@ export default function PotensiDetailPage() {
           <div className="mt-16 flex justify-center">
             <button
               onClick={() => router.back()}
-              className="px-10 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+              className="px-10 py-4 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Kembali ke Potensi Desa
             </button>

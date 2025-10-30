@@ -49,7 +49,7 @@ export default function PopupJelajahiDesa({ isOpen, onClose, title, content }: P
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 sm:px-8 py-6 flex items-center justify-between">
+          <div className="bg-linear-to-r from-red-600 to-red-700 px-6 sm:px-8 py-6 flex items-center justify-between">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">{title}</h2>
             <button
               onClick={onClose}
@@ -72,7 +72,7 @@ export default function PopupJelajahiDesa({ isOpen, onClose, title, content }: P
           </div>
 
           {/* Footer dengan tombol close */}
-          <div className="flex-shrink-0 bg-gray-50 px-6 sm:px-8 py-4 border-t border-gray-200 flex justify-end gap-3">
+          <div className="shrink-0 bg-gray-50 px-6 sm:px-8 py-4 border-t border-gray-200 flex justify-end gap-3">
             <button
               onClick={onClose}
               className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors duration-200 cursor-pointer"
