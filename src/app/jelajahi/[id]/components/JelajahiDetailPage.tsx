@@ -585,8 +585,8 @@ const HistoryContent = () => {
   const panitiaPemekaran = [
     { jabatan: "Hukum Tua", nama: "Ny. Nortje Palar Tendean, SE" },
     { jabatan: "Ketua", nama: "Joppie Rondonuwu" },
-    { jabatan: "Wakil Ketua", nama: "Drs. Darma Palar" },
-    { jabatan: "Sekretaris", nama: "Jaudi Polii" },
+    { jabatan: "Wakil Ketua", nama: "Drs. Dharma Palar" },
+    { jabatan: "Sekretaris", nama: "Joudi Polii" },
     { jabatan: "Bendahara", nama: "Jappi Walukow, SE" },
   ]
 
