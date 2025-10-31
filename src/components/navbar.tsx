@@ -78,7 +78,11 @@ export default function NavbarWithAuth() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image src="/images/minahasa.jpg" alt="Logo Minahasa" width={50} height={50} className="object-contain" />
-            <span className="font-bold text-lg text-gray-800">Desa Kiawa Satu</span>
+            <div className="flex flex-col items-start">
+              <span className="font-bold text-lg text-gray-800">Desa Kiawa Satu</span>
+              <span className="text-xs text-gray-600">Kabupaten Minahasa</span>
+              <span className="text-xs text-gray-600">Kecamatan Kawangkoan Utara</span>
+            </div>
           </div>
         </div>
       </nav>
@@ -91,7 +95,11 @@ export default function NavbarWithAuth() {
         {/* Logo */}
         <button onClick={() => router.push("/")} className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition">
           <Image src="/images/minahasa.jpg" alt="Logo Minahasa" width={50} height={50} className="object-contain" />
-          <span className="font-bold text-lg text-gray-800">Desa Kiawa Satu</span>
+          <div className="flex flex-col items-start">
+            <span className="font-bold text-lg text-gray-800">Desa Kiawa Satu</span>
+            <span className="text-xs text-gray-600">Kabupaten Minahasa</span>
+            <span className="text-xs text-gray-600">Kecamatan Kawangkoan Utara</span>
+          </div>
         </button>
 
         {/* Hamburger Button - Mobile */}
