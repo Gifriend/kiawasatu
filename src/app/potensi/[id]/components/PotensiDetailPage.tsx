@@ -102,7 +102,7 @@ const POTENSI_DATA = {
       {
         title: "Proses Produksi Kacang Shanghai",
         description:
-          "Proses pembuatan kacang shanghai dilakukan dengan standar kebersihan tinggi. Bahan baku kacang tanah pilihan dicuci bersih, kemudian digoreng dengan minyak berkualitas dan dibumbui dengan racikan khusus. Setiap batch produksi dikontrol kualitasnya untuk memastikan konsistensi rasa dan kerenyahan.",
+          "Proses pembuatan kacang shanghai dilakukan dengan standar kebersihan tinggi. Bahan baku kacang tanah pilihan dicuci bersih, kemudian digoreng dengan minyak berkualitas. Setiap batch produksi dikontrol kualitasnya untuk memastikan konsistensi rasa dan kerenyahan.",
       },
       {
         title: "Kue Telur Tradisional",
