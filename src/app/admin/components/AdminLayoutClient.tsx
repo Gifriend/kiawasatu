@@ -1,6 +1,6 @@
-"use client";
+"use client"; 
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, Menu } from "lucide-react"; 
@@ -15,22 +15,48 @@ export default function AdminLayoutClient({
   const supabase = createClient();
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State untuk sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
+
+  const handleLogout = useCallback(async () => {
+    await supabase.auth.signOut();
+    localStorage.removeItem('sessionExpiry'); // Hapus timer saat logout
+    router.push('/auth/login');
+  }, [supabase, router]);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    let sessionTimer: NodeJS.Timeout;
+
+    const checkSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push("/auth/login");
-      } else {
-        setUser(user);
         setIsLoading(false);
+        return handleLogout(); 
+      }
+
+      const expiryTime = parseInt(localStorage.getItem('sessionExpiry') || '0', 10);
+      const now = Date.now();
+
+      if (expiryTime === 0 || now > expiryTime) {
+        setIsLoading(false);
+        return handleLogout(); // Paksa logout
+      }
+
+      setUser(user);
+      setIsLoading(false); // Tampilkan halaman
+
+      const remainingTime = expiryTime - now;
+      sessionTimer = setTimeout(handleLogout, remainingTime);
+    };
+
+    checkSession();
+
+    // Cleanup timer saat komponen unmount
+    return () => {
+      if (sessionTimer) {
+        clearTimeout(sessionTimer);
       }
     };
-    checkAuth();
-  }, [router, supabase.auth]);
+  }, [supabase, router, handleLogout]); 
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -47,10 +73,14 @@ export default function AdminLayoutClient({
     );
   }
 
-  // Jika sudah tidak loading dan user ada (terautentikasi)
+  // Jika tidak loading dan user ada (terautentikasi dan sesi valid)
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <AdminSidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      <AdminSidebar 
+        isOpen={isSidebarOpen} 
+        onClose={toggleSidebar} 
+        handleLogout={handleLogout} 
+      />
 
       <div className="flex-1 flex flex-col">
         {/* Header Mobile (hanya tampil di mobile) */}

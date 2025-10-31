@@ -91,7 +91,7 @@ const POTENSI_DATA = {
     images: [
       "/images/potensidesa/kacangshanghai.jpg",
       "/images/potensidesa/kuetelur.jpg",
-      "/images/potensidesa/kripik.jpg",
+      "/images/potensidesa/keripik.jpg",
     ],
     sections: [
       {

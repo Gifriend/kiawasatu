@@ -29,6 +29,8 @@ export default function LoginPage() {
         password,
       })
       if (error) throw error
+      const expiryTime = Date.now() + 3600 * 1000; 
+      localStorage.setItem('sessionExpiry', expiryTime.toString());
       router.push("/admin")
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")

@@ -8,17 +8,18 @@ import { Home, Newspaper, Users, BarChart2, LogOut, Info, X } from "lucide-react
 interface AdminSidebarProps {
   isOpen: boolean;
   onClose: () => void; // Fungsi untuk menutup sidebar (misalnya saat klik link/overlay)
+  handleLogout: () => void
 }
 
-export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
+export default function AdminSidebar({ isOpen, onClose, handleLogout }: AdminSidebarProps) {
   const router = useRouter();
   const supabase = createClient();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/"); 
-    onClose(); // Tutup sidebar setelah logout
-  };
+  // const handleLogout = async () => {
+  //   await supabase.auth.signOut();
+  //   router.push("/"); 
+  //   onClose(); // Tutup sidebar setelah logout
+  // };
 
   // Tutup sidebar saat link navigasi diklik
   const handleLinkClick = () => {
